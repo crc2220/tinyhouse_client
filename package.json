@@ -18,7 +18,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "additional-rule": "warn"
+    }
   },
   "browserslist": {
     "production": [
@@ -32,5 +35,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:9000"
+  "proxy": "http://localhost:9000",
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^2.5.0"
+  }
 }

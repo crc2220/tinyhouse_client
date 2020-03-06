@@ -28,7 +28,7 @@ export const server = {
         // tells Typescript you know what you're doing
         // override Typescripts infers or analyzes by doing {this} as {Type}
         // when you Type out a Promise you say Promise and then the thing Type it returns
-        // you do Type assertion when you know better than the compiler  
+        // you do Type assertion, the "as" thing, when you know better than the compiler  
         return res.json() as Promise<{ data: TData}>;
 
     }
