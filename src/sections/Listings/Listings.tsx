@@ -1,5 +1,8 @@
 import React from "react";
-import { server, useQuery } from "../../lib/api";
+import { 
+  useQuery,
+  useMutation
+} from "../../lib/api";
 import { 
   ListingArray, 
   DeleteListingVariables, 
@@ -42,7 +45,13 @@ interface Props {
 export const Listings = ({ title }: Props) => {
 
   // we will send in the type as a generic to say this is what we expect our data to look like when it's returned
-  const { data, refetch } = useQuery<ListingArray>(LISTINGS);
+  const { data, loading, error, refetch } = useQuery<ListingArray>(LISTINGS);
+  const [deleteListing, { 
+    loading: deleteListingLoading, 
+    error: deleteListingError
+   }] = useMutation<DeletedListing, DeleteListingVariables>(DELETE_LISTING);
+
+  // useMutation will simply return a function you can call when you want to use it
 
   // tell useState that it's going to store an array of Listing types
   // since it can also be null we specify a union type
@@ -77,14 +86,10 @@ export const Listings = ({ title }: Props) => {
     // });
     // setListings(data.listings);
   // }
-  const deleteListing = async (id: string) => {
-    await server.fetch<DeletedListing, DeleteListingVariables>({
-      query: DELETE_LISTING,
-      variables: {
-        id: id
-      }
-    });
-    // fetchListings();
+  const handleDeleteListing = async (id: string) => {
+    await deleteListing({ id });
+    // if you look at the deleteListing function you'll see that if there is an error a console.error is thrown
+    // since console.error is thrown the refetch() below will not get called
     refetch();
   }
 
@@ -97,7 +102,7 @@ export const Listings = ({ title }: Props) => {
           return (
             <li key={listing.id}>
               {listing.title}
-              <button onClick={() => deleteListing(listing.id)}>
+              <button onClick={() => handleDeleteListing(listing.id)}>
                 Delete
               </button>
             </li>
@@ -106,11 +111,26 @@ export const Listings = ({ title }: Props) => {
       }
     </ul>
   ) : null;
-  
+  if(loading){
+    return <h2>loading...</h2>
+  }
+  if(error){
+    return (
+      <h2>
+        Uh oh! Something went wrong - please try again laster.
+      </h2>
+    );
+  }
+
+  const deleteListingLoadingMessage = deleteListingLoading ? <h4>Deletion in progress...</h4> : null;
+  const deleteListingErrorMessage = deleteListingError ? <h4>Deletion error please try again.</h4> : null;
+
   return (
     <>
       <h2>{title}</h2>
       {listingsList}
+      {deleteListingLoadingMessage}
+      {deleteListingErrorMessage}
     </>
   );
 };

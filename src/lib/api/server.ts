@@ -12,6 +12,10 @@ interface Body<TVariables> {
 // how does that object get passed through?
 // how can we pass through the Type/Interface for that shape?
 
+interface Error {
+    message: string;
+}
+
 export const server = {
     fetch: async <TData = any, TVariables = any>(body: Body<TVariables>) => {
         // make sure you don't do cross-origin resource sharing
@@ -24,12 +28,20 @@ export const server = {
             body: JSON.stringify(body)
         });
 
+        // this is returned if server is messed up
+        if(!res.ok){
+            throw new Error("Failed to fetch from server");
+        }
         // below is an example of Type Assertion
         // tells Typescript you know what you're doing
         // override Typescripts infers or analyzes by doing {this} as {Type}
         // when you Type out a Promise you say Promise and then the thing Type it returns
         // you do Type assertion, the "as" thing, when you know better than the compiler  
-        return res.json() as Promise<{ data: TData}>;
+        // errors is included incase error from graphql is returned
+        return res.json() as Promise<{ 
+            data: TData;
+            errors: Error[];
+        }>;
 
     }
 }
