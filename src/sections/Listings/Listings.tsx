@@ -1,17 +1,16 @@
 import React from "react";
-import { 
-  useQuery,
-  useMutation
-} from "../../lib/api";
-import { 
-  ListingArray, 
-  DeleteListingVariables, 
-  DeletedListing
-} from "./types";
+import { gql } from "apollo-boost";
+import { useQuery, useMutation } from "react-apollo";
+
+// these generated types come from the Schema created by our graphql server
+// if our server changes schema then we just run the npm script to regenerate the types/interfaces
+import { Listings as ListingArray } from "./__generated__/Listings";
+import { DeleteListing as DeletedListing, DeleteListingVariables } from "./__generated__/DeleteListing";
+
 // graphql queries don't require a name like below:
 // "Listings" it can be anything you want it to be
 // you could even omit it 
-const LISTINGS = `
+const LISTINGS = gql`
   query Listings {
     listings {
       id
@@ -30,7 +29,7 @@ const LISTINGS = `
 // expecting a variable of ID in graphql we use ( $id: ID! )
 // $id gets Typed as ID!
 // $id gets sent down into gql schema mutation function as $id in (id: $id)
-const DELETE_LISTING = `
+const DELETE_LISTING = gql`
   mutation DeleteListing($id: ID!) {
     deleteListing(id: $id){
       id
@@ -84,10 +83,12 @@ export const Listings = ({ title }: Props) => {
     // const { data } = await server.fetch<ListingArray>({
     //   query: LISTINGS
     // });
-    // setListings(data.listings);
+    // setListings(data.listings); 
   // }
   const handleDeleteListing = async (id: string) => {
-    await deleteListing({ id });
+    await deleteListing({ 
+      variables: { id } 
+    });
     // if you look at the deleteListing function you'll see that if there is an error a console.error is thrown
     // since console.error is thrown the refetch() below will not get called
     refetch();
