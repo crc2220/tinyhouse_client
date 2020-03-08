@@ -4,7 +4,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import { Listings } from "./sections";
 import * as serviceWorker from "./serviceWorker";
-
+import "./styles/index.css"
 // Apollo Boost has pre-built config for caching, state management, and error handling
 const client = new ApolloClient({
     // since we're proxying localhost:9000 in package.json we can just do "/api"

@@ -1,7 +1,8 @@
 import React from "react";
 import { gql } from "apollo-boost";
 import { useQuery, useMutation } from "react-apollo";
-
+import { List, Avatar, Button, Spin, Skeleton, Alert } from "antd";
+import "./styles/Listings.css";
 // these generated types come from the Schema created by our graphql server
 // if our server changes schema then we just run the npm script to regenerate the types/interfaces
 import { Listings as ListingArray } from "./__generated__/Listings";
@@ -97,24 +98,37 @@ export const Listings = ({ title }: Props) => {
   const listings = data ? data.listings : null;
 
   const listingsList = listings ? (
-    <ul>
-      {
-        listings.map((listing) => {
-          return (
-            <li key={listing.id}>
-              {listing.title}
-              <button onClick={() => handleDeleteListing(listing.id)}>
-                Delete
-              </button>
-            </li>
-          );
-        })
-      }
-    </ul>
+    <List 
+      itemLayout="horizontal"
+      dataSource={listings}
+      renderItem={listing => (
+        <>
+          <Skeleton 
+            loading={loading || deleteListingLoading} 
+            active 
+            paragraph={{ rows: 1 }}
+            avatar={{size: "small"}} >
+            <List.Item
+              actions={[
+                <Button type="primary" onClick={() => handleDeleteListing(listing.id)}>
+                  Delete
+                </Button>
+              ]}
+            >
+              <List.Item.Meta 
+                title={listing.title}
+                description={listing.address}
+                avatar={
+                  <Avatar src={listing.image} shape="square" size={48} />
+                }
+              />
+            </List.Item>
+          </Skeleton>
+        </>
+      )}
+    />
   ) : null;
-  if(loading){
-    return <h2>loading...</h2>
-  }
+
   if(error){
     return (
       <h2>
@@ -123,15 +137,20 @@ export const Listings = ({ title }: Props) => {
     );
   }
 
-  const deleteListingLoadingMessage = deleteListingLoading ? <h4>Deletion in progress...</h4> : null;
-  const deleteListingErrorMessage = deleteListingError ? <h4>Deletion error please try again.</h4> : null;
+  const deleteListingErrorMessage = deleteListingError ? (
+    <Alert 
+      type="error"
+      message="Uh oh! Something went wrong - please try again later :("
+    /> 
+  ): null;
 
   return (
-    <>
-      <h2>{title}</h2>
-      {listingsList}
-      {deleteListingLoadingMessage}
-      {deleteListingErrorMessage}
-    </>
+    <div className="listings">
+      <Spin spinning={deleteListingLoading}>
+        {deleteListingErrorMessage}
+        <h2>{title}</h2>
+        {listingsList}
+      </Spin>
+    </div>
   );
 };
