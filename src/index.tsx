@@ -16,10 +16,14 @@ const App = () => {
     return (
         <Router>
             <Switch>
-                {/* you want `exact` in the route to avoid partial matching pitfalls when using Switch  */}
+                {/* you want `exact` in the route to avoid partial matching pitfalls when using Switch  
+                    go to users/create and don't have exact specified if you have users defined React Router
+                    will select that first since it does partial matching by default and not select users/create
+                */}
                 <Route exact path="/" component={Home} />
                 <Route exact path="/host" component={Host} />
                 <Route exact path="/listing/:id" component={Listing} />
+                {/* the ? below is saying the location is optional and listings without location will still display Listings component */}
                 <Route exact path="/listings/:location?" component={Listings} />
                 <Route exact path="/user/:id" component={User} />
                 <Route component={NotFound} />
