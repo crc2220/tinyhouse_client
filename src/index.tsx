@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
-import { Home, Host, Listing, Listings, NotFound, User } from "./sections";
+import { Home, Host, Listing, Listings, Login, NotFound, User } from "./sections";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/index.css";
 // Apollo Boost has pre-built config for caching, state management, and error handling
@@ -25,6 +25,7 @@ const App = () => {
                 <Route exact path="/listing/:id" component={Listing} />
                 {/* the ? below is saying the location is optional and listings without location will still display Listings component */}
                 <Route exact path="/listings/:location?" component={Listings} />
+                <Route exact path="/login" component={Login} />
                 <Route exact path="/user/:id" component={User} />
                 <Route component={NotFound} />
             </Switch>
