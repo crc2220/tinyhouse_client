@@ -3,6 +3,7 @@ import { render } from "react-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
+import { Layout } from "antd";
 import { Home, Host, Listing, Listings, Login, NotFound, User } from "./sections";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/index.css";
@@ -15,20 +16,22 @@ const client = new ApolloClient({
 const App = () => {
     return (
         <Router>
-            <Switch>
-                {/* you want `exact` in the route to avoid partial matching pitfalls when using Switch  
-                    go to users/create and don't have exact specified if you have users defined React Router
-                    will select that first since it does partial matching by default and not select users/create
-                */}
-                <Route exact path="/" component={Home} />
-                <Route exact path="/host" component={Host} />
-                <Route exact path="/listing/:id" component={Listing} />
-                {/* the ? below is saying the location is optional and listings without location will still display Listings component */}
-                <Route exact path="/listings/:location?" component={Listings} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/user/:id" component={User} />
-                <Route component={NotFound} />
-            </Switch>
+            <Layout id="app">
+                <Switch>
+                    {/* you want `exact` in the route to avoid partial matching pitfalls when using Switch  
+                        go to users/create and don't have exact specified if you have users defined React Router
+                        will select that first since it does partial matching by default and not select users/create
+                    */}
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/host" component={Host} />
+                    <Route exact path="/listing/:id" component={Listing} />
+                    {/* the ? below is saying the location is optional and listings without location will still display Listings component */}
+                    <Route exact path="/listings/:location?" component={Listings} />
+                    <Route exact path="/login" component={Login} />
+                    <Route exact path="/user/:id" component={User} />
+                    <Route component={NotFound} />
+                </Switch>
+            </Layout>
         </Router>
     );
 };
