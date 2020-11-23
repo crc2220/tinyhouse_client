@@ -1,15 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Menu } from "antd";
+import { Button, Menu, Avatar } from "antd";
 import { HomeOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
 import { LOG_OUT } from "../../graphql/mutations/LogOut";
 import { LogOut as LogOutData } from "../../graphql/mutations/LogOut/__generated__/LogOut";
-const { Item, SubMenu } = Menu;
-
 import { Viewer } from "../../types";
-
 import { displaySuccessNotification, displayErrorMessage } from "../../utils";
+
+const { Item, SubMenu } = Menu;
 
 interface Props {
   viewer: Viewer;
@@ -17,6 +16,7 @@ interface Props {
 }
 
 export const MenuItems = ({ viewer, setViewer }: Props) => {
+  console.log(viewer);
   const [logOut] = useMutation<LogOutData>(LOG_OUT, {
     onCompleted: (data) => {
       if (data && data.logOut) {
@@ -35,7 +35,7 @@ export const MenuItems = ({ viewer, setViewer }: Props) => {
   };
   const subMenuLogin =
     viewer.id && viewer.avatar ? (
-      <SubMenu>
+      <SubMenu title={<Avatar src={viewer.avatar} />}>
         <Item key={"/user/"}>
           <UserOutlined />
           Profile
