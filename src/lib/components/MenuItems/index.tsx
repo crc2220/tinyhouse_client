@@ -16,7 +16,6 @@ interface Props {
 }
 
 export const MenuItems = ({ viewer, setViewer }: Props) => {
-  console.log(viewer);
   const [logOut] = useMutation<LogOutData>(LOG_OUT, {
     onCompleted: (data) => {
       if (data && data.logOut) {

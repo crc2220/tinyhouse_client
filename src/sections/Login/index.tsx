@@ -7,7 +7,7 @@ import { Viewer } from "../../lib/types";
 import { AUTH_URL } from "../../lib/graphql/queries/AuthUrl";
 import { AuthUrl as AuthUrlData } from "../../lib/graphql/queries/AuthUrl/__generated__/AuthUrl";
 
-import { LOG_IN } from "../../lib/graphql/mutations/LogIn";
+import { LOG_IN } from "../../lib/graphql/mutations";
 import {
   LogIn as LogInData,
   LogInVariables,
